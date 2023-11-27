@@ -9,7 +9,7 @@ pygame.init()
 screen = pygame.display.set_mode((800, 600))
 
 # Background image
-background = pygame.image.load("backgroung.png")
+background = pygame.image.load("background.png")
 
 # Title and icon
 pygame.display.set_caption("Space Invaders")
@@ -25,9 +25,17 @@ playerX_change = 0
 # Enemy
 enemyImage = pygame.image.load("gato_foilhao2.png")
 enemyX = random.randint(0,800)
-enemyY = random.randint(50, 150)
+enemyY = random.randint(100, 150)
 enemyX_change = 0.3
-enemyY_change = 0.3
+enemyY_change = 5
+
+# Bullets 
+bulletImage = pygame.image.load("bullet.png")
+bulletX = 0
+bulletY = 480
+bulletX_change = 0
+bulletY_change = 0.7
+bullet_state = "ready"  # ready to shoot but cannot be seeing yet
 
 
 
@@ -37,6 +45,13 @@ def player(x, y):
 
 def enemy(x, y):
     screen.blit(enemyImage, (x, y))
+
+
+def bullet(x,y):
+    global bullet_state
+    bullet_state = "fire"  # now can be seeing
+    screen.blit(bulletImage, (x, y))
+
 
 # game loop
 running = True
@@ -55,6 +70,11 @@ while running:
                 playerX_change = -0.3
             if event.key == pygame.K_RIGHT:
                 playerX_change = 0.3
+            if event.key == pygame.K_SPACE:
+                if bullet_state is "ready":
+                    bulletX = playerX
+                    bullet(bulletX, bulletY)
+            
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
@@ -65,6 +85,15 @@ while running:
         playerX = 0
     elif playerX >= 740:
         playerX = 740
+
+    # Bullet mov
+    if bulletY <= 0:
+        bulletY = 480
+        bullet_state = "ready"
+
+    if bullet_state is "fire":
+        bullet(bulletX, bulletY)
+        bulletY -= bulletY_change
 
     # Enemy mov
     enemyX += enemyX_change
