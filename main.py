@@ -79,6 +79,7 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 playerX_change = 0
 
+
     playerX += playerX_change
 
     if playerX <= 0:
@@ -86,7 +87,7 @@ while running:
     elif playerX >= 740:
         playerX = 740
 
-    # Bullet mov
+    # Bullet mov and shoot
     if bulletY <= 0:
         bulletY = 480
         bullet_state = "ready"
