@@ -61,12 +61,15 @@ def bullet(x,y):
     bullet_state = "fire"  # now can be seeing
     screen.blit(bulletImage, (x + 16, y + 10))
 
-def collision(enemyX, enemyY, bulletX, bulletY):
-    distance = math.sqrt(math.pow(enemyX - bulletX, 2) + math.pow(enemyY - bulletY, 2))
+
+def iscollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt(math.pow(enemyX - bulletX, 2) + (math.pow(enemyY - bulletY, 2)))
     if distance < 27:
         return True
     else:
         return False
+
+
     
 
 # game loop
@@ -105,17 +108,7 @@ while running:
         playerX = 740
 
     
-    # Collision to kill
-    iscollision = collision(enemyX, enemyY, bulletX, bulletY)
-    if iscollision:
-        bulletY = 480
-        bullet_state = "ready"
-        score += 1
-        print(score)
-        enemyX = random.randint(0, 800)
-        enemyY = random.randint(50,150)
-
-    # Enemy mov
+        # Enemy mov
     for i in range(num_enemies):
         enemyX[i] += enemyX_change[i]
 
@@ -127,8 +120,8 @@ while running:
             enemyY[i] += enemyY_change[i]
 
         # Collision to kill
-        iscollision = collision(enemyX[i], enemyY[i], bulletX, bulletY)
-        if iscollision:
+        collision = iscollision(enemyX[i], enemyY[i], bulletX, bulletY)
+        if collision:
             bulletY = 480
             bullet_state = "ready"
             score += 1
@@ -143,11 +136,9 @@ while running:
         bulletY = 480
         bullet_state = "ready"
 
-    if bullet_state is "fire":
+    if bullet_state == "fire":
         bullet(bulletX, bulletY)
         bulletY -= bulletY_change
     
     player(playerX, playerY)
-    
-
     pygame.display.update()
